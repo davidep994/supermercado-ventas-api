@@ -11,7 +11,7 @@ public record VentaRequestDTO(
         Long idSucursal,
         @NotEmpty(message = "La venta debe tener almenos un producto")
         @Valid
-        List<?> detalle) {
+        List<DetalleRequestDTO> detalle) {
 
 
 }

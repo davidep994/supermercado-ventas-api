@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class Venta {
     @Column(nullable = false)
     private LocalDateTime fecha;
     @Column(nullable = false)
-    private Double totalVenta;
+    private BigDecimal totalVenta;
     @Column(nullable = false)
     private Boolean activo = true;
 
@@ -30,5 +31,5 @@ public class Venta {
     private Sucursal sucursal;
 
     @OneToMany(mappedBy = "venta")
-    private List<Producto> detalleVenta = new ArrayList<>();
+    private List<VentaDetalle> detalleVenta = new ArrayList<>();
 }

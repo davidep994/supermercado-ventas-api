@@ -10,6 +10,6 @@ public record VentaResponseDTO(
         LocalDateTime fecha,
         BigDecimal total,
         boolean active,
-        List<?> detalles) {
+        List<DetalleVentaResponseDTO> detalles) {
 
 }
