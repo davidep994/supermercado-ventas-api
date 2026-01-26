@@ -1,7 +1,6 @@
 package com.example.supermercado_ventas_api.repositories;
 
 import com.example.supermercado_ventas_api.models.Producto;
-import com.example.supermercado_ventas_api.models.Sucursal;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

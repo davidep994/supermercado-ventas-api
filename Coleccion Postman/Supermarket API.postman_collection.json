@@ -1,0 +1,711 @@
+{
+  "info": {
+    "_postman_id": "9a31cc71-688a-49fa-ad72-2ea5cf4ae62f",
+    "name": "Supermarket API",
+    "description": "Colección completa con Ventas, Estadísticas, Productos, Sucursales, Gestión de Inventario y Filtros Avanzados por Fecha.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "48505735"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login (Obtener Token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Guardamos el token automáticamente en una variable de colección",
+                  "if (pm.response.code === 200) {",
+                  "    var token = pm.response.text();",
+                  "    pm.collectionVariables.set(\"token\", token);",
+                  "    console.log(\"Token actualizado: \" + token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"admin\",\r\n  \"password\": \"123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Genera el token JWT y lo guarda automáticamente en la variable {{token}}."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Inventario (Stock)",
+      "item": [
+        {
+          "name": "Agregar Stock (Protegido)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"idSucursal\": 1,\r\n  \"idProducto\": 1,\r\n  \"cantidad\": 50\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/inventarios/agregar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "inventarios",
+                "agregar"
+              ]
+            },
+            "description": "Suma cantidad al stock existente o crea uno nuevo."
+          },
+          "response": []
+        },
+        {
+          "name": "Ver Todo el Stock",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "inventarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Stock por Sucursal",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventarios?sucursalId=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "inventarios"
+              ],
+              "query": [
+                {
+                  "key": "sucursalId",
+                  "value": "1",
+                  "description": "ID de la sucursal"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Stock por Producto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventarios?productoId=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "inventarios"
+              ],
+              "query": [
+                {
+                  "key": "productoId",
+                  "value": "1",
+                  "description": "ID del producto"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Stock Exacto (Prod en Sucursal)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventarios?sucursalId=1&productoId=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "inventarios"
+              ],
+              "query": [
+                {
+                  "key": "sucursalId",
+                  "value": "1"
+                },
+                {
+                  "key": "productoId",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Productos",
+      "item": [
+        {
+          "name": "Listar Productos (Público)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/productos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Producto por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/productos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Producto",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombreProducto\": \"Pan de Molde\",\r\n  \"precioProducto\": 1.50,\r\n  \"categoria\": \"Panadería\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/productos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Producto",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombreProducto\": \"Pan Integral\",\r\n  \"precioProducto\": 1.80,\r\n  \"categoria\": \"Panadería\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/productos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Producto",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/productos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sucursales",
+      "item": [
+        {
+          "name": "Listar Sucursales (Público)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sucursales",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sucursales"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Sucursal por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sucursales/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sucursales",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Sucursal",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombreSucursal\": \"Sucursal Oeste\",\r\n  \"direccion\": \"Calle Nueva 456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sucursales",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sucursales"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Sucursal",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombreSucursal\": \"Sucursal Oeste Renovada\",\r\n  \"direccion\": \"Calle Nueva 456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sucursales/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sucursales",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Sucursal",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sucursales/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sucursales",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Ventas",
+      "item": [
+        {
+          "name": "Registrar Venta 1 (Protegido)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"idSucursal\": 1,\r\n  \"detalle\": [\r\n    {\r\n      \"idProducto\": 1,\r\n      \"cantidad\": 2\r\n    },\r\n    {\r\n      \"idProducto\": 3,\r\n      \"cantidad\": 1\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/ventas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ventas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar Venta 2 (Protegido)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"idSucursal\": 2,\r\n  \"detalle\": [\r\n    {\r\n      \"idProducto\": 5,\r\n      \"cantidad\": 3\r\n    },\r\n    {\r\n      \"idProducto\": 1,\r\n      \"cantidad\": 4\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/ventas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ventas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Todas las Ventas Activas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ventas?soloActivas=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ventas"
+              ],
+              "query": [
+                {
+                  "key": "soloActivas",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Todas las Ventas (Activas y Anuladas)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ventas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ventas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtro Completo (Sucursal y/o Fecha y/o Activas)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ventas?sucursalId=1&fecha=2026-01-26&soloActivas=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ventas"
+              ],
+              "query": [
+                {
+                  "key": "sucursalId",
+                  "value": "1"
+                },
+                {
+                  "key": "fecha",
+                  "value": "2026-01-26"
+                },
+                {
+                  "key": "soloActivas",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Anular Venta (Protegido)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ventas/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ventas",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Estadísticas",
+      "item": [
+        {
+          "name": "Producto Más Vendido",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/estadisticas/producto-mas-vendido",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "estadisticas",
+                "producto-mas-vendido"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

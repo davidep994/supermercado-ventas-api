@@ -1,9 +1,6 @@
 package com.example.supermercado_ventas_api.services;
 
-import com.example.supermercado_ventas_api.dtos.DetalleRequestDTO;
-import com.example.supermercado_ventas_api.dtos.DetalleVentaResponseDTO;
-import com.example.supermercado_ventas_api.dtos.VentaRequestDTO;
-import com.example.supermercado_ventas_api.dtos.VentaResponseDTO;
+import com.example.supermercado_ventas_api.dtos.*;
 import com.example.supermercado_ventas_api.exceptions.ProductoNotFoundException;
 import com.example.supermercado_ventas_api.exceptions.SucursalNotFoundException;
 import com.example.supermercado_ventas_api.exceptions.VentaNotFoundException;
@@ -13,8 +10,8 @@ import com.example.supermercado_ventas_api.repositories.ProductoRepository;
 import com.example.supermercado_ventas_api.repositories.SucursalRepository;
 import com.example.supermercado_ventas_api.repositories.VentaRepository;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -45,7 +42,7 @@ public class VentaService {
         Venta venta = new Venta();
         venta.setSucursal(sucursal);
         venta.setFecha(LocalDateTime.now());
-        venta.setActivo(true);
+        venta.setActiva(true);
         List<VentaDetalle> detalles = ventaDTO.detalle().stream()
                 .map(item -> {
                     Producto producto = productosMap.get(item.idProducto());
@@ -53,8 +50,8 @@ public class VentaService {
                         throw new ProductoNotFoundException(item.idProducto());
                     }
                     Inventario inventario = inventarioRepository.findBySucursalAndProducto(sucursal, producto)
-                            .orElseThrow(()-> new IllegalStateException("El producto '" + producto.getNombreProducto() + "' no está registrado en el inventario de la sucursal " + sucursal.getNombreSucursal()));
-                    if (inventario.getCantidad() < item.cantidad()){
+                            .orElseThrow(() -> new IllegalStateException("El producto '" + producto.getNombreProducto() + "' no está registrado en el inventario de la sucursal " + sucursal.getNombreSucursal()));
+                    if (inventario.getCantidad() < item.cantidad()) {
                         throw new IllegalStateException("Stock insuficiente para '" + producto.getNombreProducto() + "'. Solicitado: " + item.cantidad() + ", Disponible: " + inventario.getCantidad());
                     }
                     inventario.setCantidad(inventario.getCantidad() - item.cantidad());
@@ -70,7 +67,7 @@ public class VentaService {
         BigDecimal totalVenta = detalles.stream()
                 .map(d -> d.getProducto().getPrecioProducto().multiply(BigDecimal.valueOf(d.getCantidad())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        venta.setDetalleVenta(detalles);
+        venta.setDetalles(detalles);
         venta.setTotalVenta(totalVenta);
         Venta ventaGuardada = ventaRepository.save(venta);
         return mapToDTO(ventaGuardada);
@@ -80,31 +77,31 @@ public class VentaService {
         if (idSucursal != null && !sucursalRepository.existsById(idSucursal)) {
             throw new SucursalNotFoundException(idSucursal);
         }
-        return ventaRepository.findByFiltrosAvanzados(idSucursal,fecha, soloActivas).stream()
+        return ventaRepository.findByFiltrosAvanzados(idSucursal, fecha, soloActivas).stream()
                 .map(this::mapToDTO)
                 .toList();
     }
 
     @Transactional
     public void borrarVentaLogica(Long id) {
-        Venta venta = ventaRepository.findById(id).orElseThrow(()-> new VentaNotFoundException(id));
+        Venta venta = ventaRepository.findById(id).orElseThrow(() -> new VentaNotFoundException(id));
 
-        if (!venta.getActivo()) {
+        if (!venta.getActiva()) {
             throw new IllegalStateException("Esta venta ya fue anulada anteriormente");
         }
-        for (VentaDetalle ventaDetalle : venta.getDetalleVenta()) {
-            Inventario inventario = inventarioRepository.findBySucursalAndProducto(venta.getSucursal(),ventaDetalle.getProducto())
-                    .orElseThrow(()-> new IllegalStateException("Error de integridad: no se encuentra inventario para reponer stock"));
-            inventario.setCantidad(inventario.getCantidad() +ventaDetalle.getCantidad());
+        for (VentaDetalle ventaDetalle : venta.getDetalles()) {
+            Inventario inventario = inventarioRepository.findBySucursalAndProducto(venta.getSucursal(), ventaDetalle.getProducto())
+                    .orElseThrow(() -> new IllegalStateException("Error de integridad: no se encuentra inventario para reponer stock"));
+            inventario.setCantidad(inventario.getCantidad() + ventaDetalle.getCantidad());
             inventarioRepository.save(inventario);
         }
-        venta.setActivo(false);
+        venta.setActiva(false);
         ventaRepository.save(venta);
     }
 
     private VentaResponseDTO mapToDTO(Venta v) {
         String nombreSucursal = (v.getSucursal() != null) ? v.getSucursal().getNombreSucursal() : "Sin sucursal";
-        List<DetalleVentaResponseDTO> detallesDTO = v.getDetalleVenta().stream()
+        List<DetalleVentaResponseDTO> detallesDTO = v.getDetalles().stream()
                 .map(ventaDetalle -> {
                     Producto p = ventaDetalle.getProducto();
                     BigDecimal subtotal = p.getPrecioProducto().multiply(BigDecimal.valueOf(ventaDetalle.getCantidad()));
@@ -122,8 +119,18 @@ public class VentaService {
                 nombreSucursal,
                 v.getFecha(),
                 v.getTotalVenta(),
-                v.getActivo(),
+                v.getActiva(),
                 detallesDTO
         );
+    }
+
+    public ProductoTopVentasDTO obtenerProductoMasVendido() {
+        List<ProductoTopVentasDTO> result = ventaRepository.findProductoMasVendido(PageRequest.of(0, 1));
+
+        if (result.isEmpty()) {
+            return null;
+        }
+
+        return result.get(0);
     }
 }

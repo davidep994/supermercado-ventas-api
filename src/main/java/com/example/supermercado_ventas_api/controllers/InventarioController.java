@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,21 +20,23 @@ import java.util.Map;
 @Tag(name = "Inventarios", description = "Gestión de inventario de productos.")
 public class InventarioController {
     private final InventarioService inventarioService;
+
     @GetMapping
     @Operation(summary = "Listar inventarios", description = "Obtiene todos los inventarios disponibles.")
-    public ResponseEntity<List<InventarioResponseDTO>> verStock(@RequestParam (required = false) Long sucursalId, @RequestParam (required = false) Long productoId) {
+    public ResponseEntity<List<InventarioResponseDTO>> verStock(@RequestParam(required = false) Long sucursalId, @RequestParam(required = false) Long productoId) {
         List<InventarioResponseDTO> stock = inventarioService.verStock(sucursalId, productoId);
         return ResponseEntity.ok(stock);
     }
-    @PostMapping ("/agregar")
+
+    @PostMapping("/agregar")
     @Operation(summary = "Agregar inventario", description = "Agrega un nuevo inventario.")
     public ResponseEntity<?> agregarInventario(@Valid @RequestBody InventarioRequestDTO inventarioDTO) {
-       Inventario inventario = inventarioService.agregarInventario(inventarioDTO);
-       String mensaje = String.format("✅ Se han añadido %d unidades de '%s' a la '%s'.",
-               inventarioDTO.cantidad(),
-               inventario.getProducto().getNombreProducto(),
-               inventario.getSucursal().getNombreSucursal());
-       return ResponseEntity.ok(Map.of("message", mensaje , "producto", inventario.getProducto().getNombreProducto(), "sucursal", inventario.getSucursal().getNombreSucursal(), "nuevo stock total", inventario.getCantidad()));
+        Inventario inventario = inventarioService.agregarInventario(inventarioDTO);
+        String mensaje = String.format("✅ Se han añadido %d unidades de '%s' a la '%s'.",
+                inventarioDTO.cantidad(),
+                inventario.getProducto().getNombreProducto(),
+                inventario.getSucursal().getNombreSucursal());
+        return ResponseEntity.ok(Map.of("message", mensaje, "producto", inventario.getProducto().getNombreProducto(), "sucursal", inventario.getSucursal().getNombreSucursal(), "nuevo stock total", inventario.getCantidad()));
     }
 
 

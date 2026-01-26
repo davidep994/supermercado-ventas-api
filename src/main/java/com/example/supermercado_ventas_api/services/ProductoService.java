@@ -33,7 +33,7 @@ public class ProductoService {
         Producto productoExistente = findById(id);
         productoExistente.setNombreProducto(producto.getNombreProducto());
         productoExistente.setPrecioProducto(producto.getPrecioProducto());
-        productoExistente.setPrecioProducto(producto.getPrecioProducto());
+        productoExistente.setCategoria(producto.getCategoria());
         return productoRepository.save(productoExistente);
     }
 
@@ -42,6 +42,12 @@ public class ProductoService {
         if (!productoRepository.existsById(id)) {
             throw new ProductoNotFoundException(id);
         }
+
+        // VALIDACIÓN DE SEGURIDAD
+        if (ventaRepository.existsByDetalles_Producto_Id(id)) {
+            throw new IllegalStateException("No se puede eliminar el producto porque ya tiene ventas asociados.");
+        }
+
         productoRepository.deleteById(id);
     }
 }

@@ -1,8 +1,5 @@
 package com.example.supermercado_ventas_api.dtos;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-
 import java.math.BigDecimal;
 
 public record DetalleVentaResponseDTO(

@@ -10,13 +10,10 @@ import com.example.supermercado_ventas_api.models.Sucursal;
 import com.example.supermercado_ventas_api.repositories.InventarioRepository;
 import com.example.supermercado_ventas_api.repositories.ProductoRepository;
 import com.example.supermercado_ventas_api.repositories.SucursalRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +27,7 @@ public class InventarioService {
         if (sucursalId != null && productoId != null) {
             resultados = inventarioRepository.findBySucursalId(sucursalId).stream().filter(i -> i.getProducto().getId().equals(productoId)).toList();
 
-    }else if (sucursalId != null) {
+        } else if (sucursalId != null) {
             resultados = inventarioRepository.findBySucursalId(sucursalId);
         } else if (productoId != null) {
             resultados = inventarioRepository.findByProductoId(productoId);
@@ -48,5 +45,5 @@ public class InventarioService {
         return inventarioRepository.save(inventarioExistente);
     }
 
-    }
+}
 

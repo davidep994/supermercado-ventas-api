@@ -31,9 +31,9 @@ public class SucursalService {
 
     @Transactional
     public Sucursal update(Long id, Sucursal sucursal) {
-        Sucursal sucursalExistente =  findById(id);
+        Sucursal sucursalExistente = findById(id);
         sucursalExistente.setNombreSucursal(sucursal.getNombreSucursal());
-        sucursalExistente.setDireccion( sucursal.getDireccion());
+        sucursalExistente.setDireccion(sucursal.getDireccion());
         return sucursalRepository.save(sucursalExistente);
     }
 
@@ -41,6 +41,10 @@ public class SucursalService {
     public void delete(Long id) {
         if (!sucursalRepository.existsById(id)) {
             throw new SucursalNotFoundException(id);
+        }
+
+        if (ventaRepository.existsBySucursal_Id(id)) {
+            throw new IllegalStateException("No se puede eliminar la sucursal porque tiene ventas asociadas.");
         }
         sucursalRepository.deleteById(id);
     }
