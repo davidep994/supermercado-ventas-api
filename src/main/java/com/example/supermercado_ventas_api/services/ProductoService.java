@@ -2,6 +2,7 @@ package com.example.supermercado_ventas_api.services;
 
 import com.example.supermercado_ventas_api.exceptions.ProductoNotFoundException;
 import com.example.supermercado_ventas_api.models.Producto;
+import com.example.supermercado_ventas_api.repositories.InventarioRepository;
 import com.example.supermercado_ventas_api.repositories.ProductoRepository;
 import com.example.supermercado_ventas_api.repositories.VentaRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.List;
 public class ProductoService {
     private final ProductoRepository productoRepository;
     private final VentaRepository ventaRepository;
+    private final InventarioRepository inventarioRepository;
 
     public List<Producto> findAll() {
         return productoRepository.findAll();
@@ -43,9 +45,14 @@ public class ProductoService {
             throw new ProductoNotFoundException(id);
         }
 
-        // VALIDACIÓN DE SEGURIDAD
+        // VALIDACIÓN DE VENTAS
         if (ventaRepository.existsByDetalles_Producto_Id(id)) {
             throw new IllegalStateException("No se puede eliminar el producto porque ya tiene ventas asociados.");
+        }
+
+        // VALIDACIÓN DE INVENTARIO
+        if (inventarioRepository.existsByProducto_Id(id)){
+            throw new IllegalStateException("No se puede eliminar el producto porque tiene stock registrado en el inventario. Elimine el inventario primero.");
         }
 
         productoRepository.deleteById(id);

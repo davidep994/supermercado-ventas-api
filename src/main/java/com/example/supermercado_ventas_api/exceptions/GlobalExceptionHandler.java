@@ -1,6 +1,7 @@
 package com.example.supermercado_ventas_api.exceptions;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -32,12 +33,11 @@ public class GlobalExceptionHandler {
         body.put("message", "la solicitud contiene datos inválidos");
         body.put("detalles", errores);
 
-
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
     // Maneja todas las excepciones que heredan de ResourceNotFoundException
-    @ExceptionHandler({ProductoNotFoundException.class, SucursalNotFoundException.class, VentaNotFoundException.class})
+    @ExceptionHandler({ProductoNotFoundException.class, SucursalNotFoundException.class, VentaNotFoundException.class, InventarioNotFoundException.class})
     public ResponseEntity<Map<String, Object>> handleResourceNotFoundException(ResourceNotFoundException ex) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
@@ -69,6 +69,17 @@ public class GlobalExceptionHandler {
         body.put("status", HttpStatus.CONFLICT.value());
         body.put("error", "Conflicto de operación");
         body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, Object>> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.CONFLICT.value());
+        body.put("error", "Conflicto de integridad de datos");
+        body.put("message", "No se puede realizar la operacion porque el registro está siendo usado por otra parte del sistema (ej. tiene ventas o inventario asociado)");
 
         return new ResponseEntity<>(body, HttpStatus.CONFLICT);
     }
