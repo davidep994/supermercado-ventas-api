@@ -12,6 +12,7 @@ import com.example.supermercado_ventas_api.repositories.ProductoRepository;
 import com.example.supermercado_ventas_api.repositories.SucursalRepository;
 import com.example.supermercado_ventas_api.repositories.VentaRepository;
 import com.example.supermercado_ventas_api.services.VentaService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,11 +24,10 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
-
 @ExtendWith(MockitoExtension.class)
-
 class VentaServiceTest {
     @Mock
     private VentaRepository ventaRepository;
@@ -42,6 +42,7 @@ class VentaServiceTest {
     private VentaService ventaService;
 
     @Test
+    @DisplayName("Debe registrar una venta exitosamente si hay stock")
     void testRegistrarVenta() {
         Long sucursalId = 1L;
         Long productoId = 1L;
@@ -49,33 +50,39 @@ class VentaServiceTest {
         Sucursal sucursalMock = Sucursal.builder().id(sucursalId).nombreSucursal("Sucursal 1").build();
         Producto productoMock = Producto.builder().id(productoId).nombreProducto("Producto 1").precioProducto(BigDecimal.TEN).build();
 
-        Inventario inventarioMock = Inventario.builder().id(1L).sucursal(sucursalMock).producto(productoMock).cantidad(10).build();
-        VentaRequestDTO RequestDTO = new VentaRequestDTO(sucursalId, List.of(new DetalleRequestDTO(productoId, 1)));
+        Inventario inventarioMock = Inventario.builder()
+                .id(1L)
+                .sucursal(sucursalMock)
+                .producto(productoMock)
+                .cantidad(10)
+                .build();
+
+        VentaRequestDTO requestDTO = new VentaRequestDTO(
+                sucursalId,
+                List.of(new DetalleRequestDTO(productoId, 2)));
 
         when(sucursalRepository.findById(sucursalId)).thenReturn(Optional.of(sucursalMock));
-        when(productoRepository.findById(productoId)).thenReturn(Optional.of(productoMock));
+        when(productoRepository.findAllById(anyList())).thenReturn(List.of(productoMock));
         when(inventarioRepository.findBySucursalAndProducto(sucursalMock, productoMock)).thenReturn(Optional.of(inventarioMock));
 
         when(ventaRepository.save(any(Venta.class))).thenAnswer(i -> {
             Venta venta = i.getArgument(0);
             venta.setId(1L);
             return venta;
-
         });
 
-        VentaResponseDTO resultado = ventaService.registrarVenta(RequestDTO);
+        VentaResponseDTO resultado = ventaService.registrarVenta(requestDTO);
 
         assertNotNull(resultado);
-        assertEquals(new BigDecimal("10.0"), resultado.total());
-        assertEquals(9, inventarioMock.getCantidad());
+        assertEquals(0, new BigDecimal("20.0").compareTo(resultado.total()), "El total debe ser 20.0");
+        assertEquals(8, inventarioMock.getCantidad(), "El stock debe quedar en 8");
 
         verify(ventaRepository, times(1)).save(any(Venta.class));
         verify(inventarioRepository, times(1)).save(inventarioMock);
-
-
     }
 
     @Test
+    @DisplayName("Debe lanzar error si no hay stock suficiente")
     void testRegistrarVentaSinStock() {
         Long sucursalId = 1L;
         Long productoId = 1L;
@@ -87,11 +94,13 @@ class VentaServiceTest {
         VentaRequestDTO requestDTO = new VentaRequestDTO(sucursalId, List.of(new DetalleRequestDTO(productoId, 5)));
 
         when(sucursalRepository.findById(sucursalId)).thenReturn(Optional.of(sucursalMock));
-        when(productoRepository.findById(productoId)).thenReturn(Optional.of(productoMock));
+        when(productoRepository.findAllById(anyList())).thenReturn(List.of(productoMock));
         when(inventarioRepository.findBySucursalAndProducto(sucursalMock, productoMock)).thenReturn(Optional.of(inventarioMock));
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> ventaService.registrarVenta(requestDTO));
+
         assertTrue(exception.getMessage().contains("Stock insuficiente"));
+
         verify(ventaRepository, never()).save(any());
     }
 }
