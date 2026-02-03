@@ -39,7 +39,7 @@ public class InventarioServiceTest {
         Sucursal sucursal = new Sucursal(1L, "Norte", "Calle 1");
         Producto producto = new Producto(1L, "Pan", BigDecimal.ONE, "Comida");
 
-        Inventario inventarioExistente = new Inventario(idInventario, sucursal, producto, 10); // Había 10
+        Inventario inventarioExistente = new Inventario(idInventario, sucursal, producto, 10);
 
         when(inventarioRepository.findById(idInventario)).thenReturn(Optional.of(inventarioExistente));
         when(inventarioRepository.save(any(Inventario.class))).thenReturn(inventarioExistente);
