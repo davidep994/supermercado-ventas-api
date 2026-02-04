@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -33,16 +34,22 @@ public class VentaService {
 
     @Transactional
     public VentaResponseDTO registrarVenta(VentaRequestDTO ventaDTO) {
-        Sucursal sucursal = sucursalRepository.findById(ventaDTO.idSucursal()).orElseThrow(() -> new SucursalNotFoundException(ventaDTO.idSucursal()));
+        Sucursal sucursal = sucursalRepository.findById(ventaDTO.idSucursal())
+                .orElseThrow(() -> new SucursalNotFoundException(ventaDTO.idSucursal()));
+
         List<Long> productoIDs = ventaDTO.detalle().stream()
                 .map(DetalleRequestDTO::idProducto)
                 .toList();
+
         Map<Long, Producto> productosMap = productoRepository.findAllById(productoIDs).stream()
                 .collect(Collectors.toMap(Producto::getId, Function.identity()));
+
         Venta venta = new Venta();
         venta.setSucursal(sucursal);
         venta.setFecha(LocalDateTime.now());
         venta.setActiva(true);
+
+        // 1. Generamos la lista
         List<VentaDetalle> detalles = ventaDTO.detalle().stream()
                 .map(item -> {
                     Producto producto = productosMap.get(item.idProducto());
@@ -50,10 +57,15 @@ public class VentaService {
                         throw new ProductoNotFoundException(item.idProducto());
                     }
                     Inventario inventario = inventarioRepository.findBySucursalAndProducto(sucursal, producto)
-                            .orElseThrow(() -> new IllegalStateException("El producto '" + producto.getNombreProducto() + "' no está registrado en el inventario de la sucursal " + sucursal.getNombreSucursal()));
+                            .orElseThrow(() -> new IllegalStateException("El producto no está en el inventario"));
+
+                    // Validación de stock
                     if (inventario.getCantidad() < item.cantidad()) {
-                        throw new IllegalStateException("Stock insuficiente para '" + producto.getNombreProducto() + "'. Solicitado: " + item.cantidad() + ", Disponible: " + inventario.getCantidad());
+                        // OJO: Asegúrate de que tu GlobalExceptionHandler mapee IllegalStateException a 409 Conflict
+                        throw new IllegalStateException("Stock insuficiente...");
                     }
+
+                    // Actualizar inventario
                     inventario.setCantidad(inventario.getCantidad() - item.cantidad());
                     inventarioRepository.save(inventario);
 
@@ -64,11 +76,14 @@ public class VentaService {
                             .build();
                 }).toList();
 
-        BigDecimal totalVenta = detalles.stream()
+        venta.setDetalles(new ArrayList<>(detalles));
+
+        BigDecimal totalVenta = venta.getDetalles().stream()
                 .map(d -> d.getProducto().getPrecioProducto().multiply(BigDecimal.valueOf(d.getCantidad())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        venta.setDetalles(detalles);
+
         venta.setTotalVenta(totalVenta);
+
         Venta ventaGuardada = ventaRepository.save(venta);
         return mapToDTO(ventaGuardada);
     }
