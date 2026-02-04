@@ -112,7 +112,7 @@ public class InventarioServiceTest {
             inventarioService.agregarInventario(requestDTO);
         });
 
-        //Verificamos que se quedó en el segundo paso y nunca intentó buscar en el invnetario ni guardar
+        //Verificamos que se quedó en el segundo paso y nunca intentó buscar en el inventario ni guardar
         verify(inventarioRepository, never()).findBySucursalAndProducto(any(), any());
         verify(inventarioRepository, never()).save(any(Inventario.class));
     }
