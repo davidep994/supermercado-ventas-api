@@ -3,6 +3,7 @@ package com.example.supermercado_ventas_api.controllers;
 import com.example.supermercado_ventas_api.dtos.InventarioRequestDTO;
 import com.example.supermercado_ventas_api.dtos.InventarioResponseDTO;
 import com.example.supermercado_ventas_api.dtos.InventarioUpdateDTO;
+import com.example.supermercado_ventas_api.exceptions.ResourceNotFoundException;
 import com.example.supermercado_ventas_api.services.InventarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,6 +31,11 @@ public class InventarioController {
             @RequestParam(required = false) Long productoId) {
 
         List<InventarioResponseDTO> stock = inventarioService.verStock(sucursalId, productoId);
+
+        if (stock.isEmpty()) {
+            throw new ResourceNotFoundException("No hay inventario que coincida con la búsqueda.");
+        }
+
         return ResponseEntity.ok(stock);
     }
 

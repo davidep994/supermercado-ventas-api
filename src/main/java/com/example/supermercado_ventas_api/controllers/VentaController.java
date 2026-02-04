@@ -2,6 +2,7 @@ package com.example.supermercado_ventas_api.controllers;
 
 import com.example.supermercado_ventas_api.dtos.VentaRequestDTO;
 import com.example.supermercado_ventas_api.dtos.VentaResponseDTO;
+import com.example.supermercado_ventas_api.exceptions.ResourceNotFoundException;
 import com.example.supermercado_ventas_api.services.VentaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,8 +34,14 @@ public class VentaController {
     public ResponseEntity<List<VentaResponseDTO>> buscarVenta(@RequestParam(required = false) Long idSucursal,
                                                               @RequestParam(required = false) LocalDate fecha,
                                                               @RequestParam(required = false, defaultValue = "false") boolean soloActivas) {
-        return ResponseEntity.ok(ventaService.buscarVentas(idSucursal, fecha, soloActivas));
 
+        List<VentaResponseDTO> resultados = ventaService.buscarVentas(idSucursal, fecha, soloActivas);
+
+        if (resultados.isEmpty()) {
+            throw new ResourceNotFoundException("No se encontraron ventas con los filtros proporcionados.");
+        }
+
+        return ResponseEntity.ok(resultados);
     }
 
     @DeleteMapping("/{id}")
@@ -43,6 +50,4 @@ public class VentaController {
         ventaService.borrarVentaLogica(id);
         return ResponseEntity.ok(Map.of("Mensaje", "Venta anulada con éxito"));
     }
-
-
 }
