@@ -96,7 +96,7 @@ class SucursalServiceTest {
         // Ejecutar
         Sucursal resultado = sucursalService.create(nuevaSucursal);
 
-        // Verificar
+        // Verificar resultado
         assertNotNull(resultado);
         assertEquals("Sur", resultado.getNombreSucursal());
         verify(sucursalRepository, times(1)).save(nuevaSucursal);
