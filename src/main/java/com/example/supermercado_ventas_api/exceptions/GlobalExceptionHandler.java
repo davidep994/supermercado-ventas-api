@@ -37,12 +37,12 @@ public class GlobalExceptionHandler {
     }
 
     // Maneja todas las excepciones que heredan de ResourceNotFoundException
-    @ExceptionHandler({ProductoNotFoundException.class, SucursalNotFoundException.class, VentaNotFoundException.class, InventarioNotFoundException.class})
+    @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleResourceNotFoundException(ResourceNotFoundException ex) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.NOT_FOUND.value());
-        body.put("error", "Recurso no encontrado");
+        body.put("error", "Recurso no encontrado"); // O "Búsqueda sin resultados"
         body.put("message", ex.getMessage());
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
