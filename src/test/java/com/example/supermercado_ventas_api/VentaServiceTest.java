@@ -131,7 +131,7 @@ class VentaServiceTest {
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> ventaService.registrarVenta(request));
 
         //Validamos que el mensaje de error sea el esperado para el usuario
-        assertTrue(exception.getMessage().contains("no está registrado en el inventario"));
+        assertTrue(exception.getMessage().contains("El producto no está en el inventario"));
 
         //Verificamos que nunca se llamó al save del repositorio
         verify(ventaRepository, never()).save(any());
