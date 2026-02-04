@@ -1,0 +1,16 @@
+${AnsiColor.BRIGHT_GREEN}
+                                                             _                             _
+  ___ _   _ _ __   ___ _ __ _ __ ___   ___ _ __ ___ __ _  __| | ___       __   _____ _ __ | |_ __ _ ___
+ / __| | | | '_ \ / _ \ '__| '_ ` _ \ / _ \ '__/ __/ _` |/ _` |/ _ \      \ \ / / _ \ '_ \| __/ _` / __|
+ \__ \ |_| | |_) |  __/ |  | | | | | |  __/ | | (_| (_| | (_| | (_) |      \ V /  __/ | | | || (_| \__ \
+ |___/\__,_| .__/ \___|_|  |_| |_| |_|\___|_|  \___\__,_|\__,_|\___/        \_/ \___|_| |_|\__\__,_|___/
+           |_|
+${AnsiColor.BRIGHT_CYAN}
+>> Application: Supermercado Ventas Api
+>> Version:     1.0.0
+>> Spring Boot: ${spring-boot.version}
+>> Developers:  - Rubén V.
+                - Carlos D.
+                - Davide P.
+                - Edu G.
+${AnsiColor.DEFAULT}
