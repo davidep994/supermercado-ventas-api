@@ -103,4 +103,83 @@ class VentaServiceTest {
 
         verify(ventaRepository, never()).save(any());
     }
+
+    @Test
+    @DisplayName("Debe lanzar error si el producto no existe en el inventario de la sucursal especifica")
+    void testRegistrarVentaNoExisteInventario() {
+        //Preparación
+        Long sucursalId = 1L;
+        Long productoId = 1L;
+        Sucursal sucursalMock = Sucursal.builder()
+                .id(sucursalId)
+                .build();
+        Producto productoMock = Producto.builder()
+                .id(productoId)
+                .nombreProducto("Pan")
+                .build();
+
+        //Creamos la solicitud de venta para un producto existente
+        VentaRequestDTO request =  new VentaRequestDTO(sucursalId, List.of(new DetalleRequestDTO(productoId, 1)));
+
+        //Simulamos que la suscursal y el producto existen
+        when(sucursalRepository.findById(sucursalId)).thenReturn(Optional.of(sucursalMock));
+        when(productoRepository.findAllById(anyList())).thenReturn(List.of(productoMock));
+        //Simulamos que el producto no tiene registro de inventario en esa sucursal
+        when(inventarioRepository.findBySucursalAndProducto(sucursalMock, productoMock)).thenReturn(Optional.empty());
+
+        // Verificamos y lanzamos IllegalStateException
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> ventaService.registrarVenta(request));
+
+        //Validamos que el mensaje de error sea el esperado para el usuario
+        assertTrue(exception.getMessage().contains("no está registrado en el inventario"));
+
+        //Verificamos que nunca se llamó al save del repositorio
+        verify(ventaRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Debe anular una venta y reponer el stock al inventario")
+    void testAnularVentaYReponerStock() {
+        Long ventaId = 1L;
+        Sucursal sucursal = Sucursal.builder()
+                .id(1L)
+                .build();
+        Producto producto = Producto.builder()
+                .id(1L)
+                .nombreProducto("Leche")
+                .build();
+
+        com.example.supermercado_ventas_api.models.VentaDetalle detalle =
+                com.example.supermercado_ventas_api.models.VentaDetalle.builder()
+                        .producto(producto)
+                        .cantidad(5)
+                        .build();
+
+        Venta ventaMock = Venta.builder()
+                .id(ventaId).
+                activa(true)
+                .sucursal(sucursal)
+                .detalles(List.of(detalle))
+                .build();
+
+        Inventario inventarioMock = Inventario.builder()
+                .sucursal(sucursal)
+                .producto(producto)
+                .cantidad(10)
+                .build();
+
+        when(ventaRepository.findById(ventaId)).thenReturn(Optional.of(ventaMock));
+        when(inventarioRepository.findBySucursalAndProducto(sucursal, producto)).thenReturn(Optional.of(inventarioMock));
+
+        ventaService.borrarVentaLogica(ventaId);
+
+        assertFalse(ventaMock.getActiva(), "La venta debe estar anulada (activa = false)");
+        assertEquals(15, inventarioMock.getCantidad(), "El stock debe haber subido de 10 a 15");
+
+        verify(inventarioRepository).save(inventarioMock);
+        verify(ventaRepository).save(ventaMock);
+    }
+
+
+
 }
