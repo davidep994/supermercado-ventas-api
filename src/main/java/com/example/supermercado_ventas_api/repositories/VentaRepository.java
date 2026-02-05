@@ -9,7 +9,10 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
-
+/**
+ * Repositorio encargado de la persistencia y consulta avanzada
+ * de ventas, incluyendo filtros dinámicos y consultas agregadas.
+ */
 public interface VentaRepository extends JpaRepository<Venta, Long> {
 
     boolean existsByDetalles_Producto_Id(Long productoId);

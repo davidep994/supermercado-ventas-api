@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * Controlador REST encargado de la gestión de ventas del sistema.
+ * Permite registrar, consultar y anular ventas.
+ */
 @RestController
 @RequestMapping("/api/ventas")
 @RequiredArgsConstructor
@@ -23,12 +26,15 @@ import java.util.Map;
 public class VentaController {
     private final VentaService ventaService;
 
+//Registra una nueva venta asociada a una sucursal y a uno o varios productos
     @PostMapping
     @Operation(summary = "Registrar una venta", description = "Registra una venta asociada a una sucursal y productos")
     public ResponseEntity<VentaResponseDTO> registrarVenta(@Valid @RequestBody VentaRequestDTO ventaDTO) {
         return new ResponseEntity<>(ventaService.registrarVenta(ventaDTO), HttpStatus.CREATED);
     }
-
+    /**
+      Permite buscar ventas aplicando filtros opcionales por sucursal,
+      fecha y estado de la venta */
     @GetMapping
     @Operation(summary = "Buscar ventas", description = "Filtra por sucursal, fecha y estado (Activas/Todas)")
     public ResponseEntity<List<VentaResponseDTO>> buscarVenta(@RequestParam(required = false) Long idSucursal,
@@ -44,6 +50,7 @@ public class VentaController {
         return ResponseEntity.ok(resultados);
     }
 
+    //Anula una venta mediante borrado lógico
     @DeleteMapping("/{id}")
     @Operation(summary = "Anular venta", description = "Realiza un borrado lógico de la venta")
     public ResponseEntity<Map<String, String>> borrarVenta(@PathVariable Long id) {

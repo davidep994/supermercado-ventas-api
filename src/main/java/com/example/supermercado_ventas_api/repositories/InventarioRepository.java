@@ -7,7 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
-
+/**
+ * Repositorio encargado de la persistencia y consulta
+ * de datos relacionados con el inventario.
+ */
 public interface InventarioRepository extends JpaRepository<Inventario, Long> {
 
     Optional<Inventario> findBySucursalAndProducto(Sucursal sucursal, Producto producto);

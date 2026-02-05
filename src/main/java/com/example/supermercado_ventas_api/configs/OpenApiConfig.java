@@ -6,7 +6,10 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Configuration;
-
+/**
+ * Configuración de OpenAPI (Swagger) para documentar la API REST
+ * e integrar autenticación mediante JWT (Bearer Token).
+ */
 @Configuration
 @OpenAPIDefinition(
         info = @Info(title = "Supermarket API", version = "1.0", description = "Documentación para gestión de ventas"),

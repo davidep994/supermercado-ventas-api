@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+/**
+ * Entidad que representa una sucursal física del supermercado.
+ */
 @Entity
 @Data
 @NoArgsConstructor

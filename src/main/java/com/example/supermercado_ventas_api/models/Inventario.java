@@ -5,7 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+/**
+ * Entidad que representa el stock de un producto
+ * en una sucursal determinada.
+ */
 @Entity
 @Data
 @NoArgsConstructor
