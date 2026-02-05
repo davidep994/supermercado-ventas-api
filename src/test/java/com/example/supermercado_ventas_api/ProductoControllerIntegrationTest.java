@@ -3,20 +3,21 @@ package com.example.supermercado_ventas_api;
 import com.example.supermercado_ventas_api.models.Producto;
 import com.example.supermercado_ventas_api.repositories.ProductoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -81,5 +82,41 @@ class ProductoControllerIntegrationTest {
         assertEquals("Leche", guardado.getNombreProducto());
     }
 
+    @Test
+    @DisplayName("Debe listar todos los productos")
+    void testListarProductos() throws Exception {
+        // Petición GET para listar
+        mockMvc.perform(get("/api/productos"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(5))
+                .andExpect(jsonPath("$[0].nombreProducto").exists());
+    }
+
+    @Test
+    @WithMockUser(username = "admin")
+    @DisplayName("Debe actualizar un producto existente")
+    void testActualizarProducto() throws Exception {
+        // Crear producto inicial
+        Producto producto = productoRepository.save(Producto.builder()
+                .nombreProducto("Pan")
+                .precioProducto(BigDecimal.valueOf(0.80))
+                .categoria("Panadería")
+                .build());
+
+        // Datos actualizados
+        Producto actualizado = Producto.builder()
+                .nombreProducto("Pan Integral")
+                .precioProducto(BigDecimal.valueOf(1.20))
+                .categoria("Panadería Premium")
+                .build();
+
+        // Petición PUT para actualizar
+        mockMvc.perform(put("/api/productos/" + producto.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(actualizado)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.nombreProducto").value("Pan Integral"))
+                .andExpect(jsonPath("$.precioProducto").value(1.20));
+    }
 
 }
