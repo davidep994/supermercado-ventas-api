@@ -13,7 +13,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Entidad que representa una venta realizada en una sucursal,
+ * incluyendo su total, fecha y los productos vendidos.
+ */
 @Entity
 @Data
 @NoArgsConstructor

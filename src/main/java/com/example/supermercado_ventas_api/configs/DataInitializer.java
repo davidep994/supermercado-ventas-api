@@ -1,5 +1,5 @@
 package com.example.supermercado_ventas_api.configs;
-
+//Importación de las entidades del dominio que se usarán para la carga inicial de datos
 import com.example.supermercado_ventas_api.models.Inventario;
 import com.example.supermercado_ventas_api.models.Producto;
 import com.example.supermercado_ventas_api.models.Sucursal;

@@ -4,7 +4,10 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
-
+/**
+ * DTO de respuesta que representa el estado actual del inventario
+ * de un producto en una sucursal.
+ */
 @Data
 @Builder
 public class InventarioResponseDTO{

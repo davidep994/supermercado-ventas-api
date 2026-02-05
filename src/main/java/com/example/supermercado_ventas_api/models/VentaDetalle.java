@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
-
+/**
+ * Entidad que representa el detalle de una venta,
+ * asociando un producto con su cantidad vendida.
+ */
 @Entity
 @Data
 @NoArgsConstructor

@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * Controlador REST encargado de la gestión del inventario de productos,
+ * permitiendo consultar, agregar, actualizar y eliminar stock.
+ */
 @RestController
 @RequestMapping("/api/inventarios")
 @RequiredArgsConstructor
@@ -23,7 +26,10 @@ import java.util.Map;
 public class InventarioController {
 
     private final InventarioService inventarioService;
-
+    /**
+     * Obtiene el stock disponible, permitiendo filtrar opcionalmente
+     * por sucursal y/o producto.
+     */
     @GetMapping
     @Operation(summary = "Listar inventarios", description = "Obtiene todos los inventarios disponibles.")
     public ResponseEntity<List<InventarioResponseDTO>> verStock(
@@ -39,6 +45,7 @@ public class InventarioController {
         return ResponseEntity.ok(stock);
     }
 
+      // Agrega stock de un producto a una sucursal determinada
     @PostMapping("/agregar")
     @Operation(summary = "Agregar inventario", description = "Agrega un nuevo inventario.")
     public ResponseEntity<?> agregarInventario(@Valid @RequestBody InventarioRequestDTO inventarioDTO) {
@@ -58,6 +65,7 @@ public class InventarioController {
         ));
     }
 
+    //Actualiza la cantidad de stock de un inventario existente
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar inventario", description = "Actualiza el stock de un inventario existente.")
     public ResponseEntity<InventarioResponseDTO>  actualizarInventario(
@@ -68,6 +76,7 @@ public class InventarioController {
         return ResponseEntity.ok(actualizado);
     }
 
+    //Elimina un registro de inventario del sistema
     @DeleteMapping("/{id}")
     @Operation(summary = "Eliminar inventario", description = "Eliminar el stock de un inventario existente.")
     public ResponseEntity<Map<String, Object>> eliminarInventario(@PathVariable Long id){
