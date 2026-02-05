@@ -10,12 +10,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
+@Transactional
 class SucursalControllerIntegrationTest {
 
     @Autowired
@@ -35,7 +37,7 @@ class SucursalControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(sucursal)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.nombre").value("Central"))
+                .andExpect(jsonPath("$.nombreSucursal").value("Central"))
                 .andExpect(jsonPath("$.direccion").value("Calle 1"));
     }
 
@@ -64,7 +66,7 @@ class SucursalControllerIntegrationTest {
 
         mockMvc.perform(get("/api/sucursales/{id}", creada.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nombre").value("Norte"));
+                .andExpect(jsonPath("$.nombreSucursal").value("Norte"));
     }
 
     @Test
@@ -92,7 +94,7 @@ class SucursalControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(actualizada)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nombre").value("Nueva"))
+                .andExpect(jsonPath("$.nombreSucursal").value("Nueva"))
                 .andExpect(jsonPath("$.direccion").value("Calle Nueva"));
     }
 
