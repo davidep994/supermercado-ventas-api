@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+
 /**
  * Controlador REST encargado de la gestión de sucursales del sistema.
  * Permite administrar las tiendas físicas del supermercado.
@@ -36,18 +37,21 @@ public class SucursalController {
     public ResponseEntity<Sucursal> findById(@PathVariable Long id) {
         return ResponseEntity.ok(sucursalService.findById(id));
     }
+
     //Registra una nueva sucursal en el sistema
     @PostMapping
     @Operation(summary = "Crear sucursal", description = "Registrar una nueva sucursal")
     public ResponseEntity<Sucursal> create(@Valid @RequestBody Sucursal sucursal) {
         return new ResponseEntity<>(sucursalService.create(sucursal), HttpStatus.CREATED);
     }
+
     //Actualiza los datos de una sucursal existente
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar sucursal", description = "Modifica los datos de una sucursal existente.")
     public ResponseEntity<Sucursal> update(@PathVariable Long id, @Valid @RequestBody Sucursal sucursal) {
         return ResponseEntity.ok(sucursalService.update(id, sucursal));
     }
+
     //Elimina una sucursal del sistema a partir de su identificador
     @DeleteMapping("/{id}")
     @Operation(summary = "Eliminar sucursal", description = "Elimina una sucursal existente.")

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
+
 /**
  * Repositorio encargado de la persistencia y consulta
  * de datos relacionados con el inventario.

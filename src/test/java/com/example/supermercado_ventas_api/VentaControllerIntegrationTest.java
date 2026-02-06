@@ -105,7 +105,7 @@ class VentaControllerIntegrationTest {
     @Test
     @DisplayName("POST /api/ventas - Debería fallar si no hay stock suficiente")
     @WithMockUser(username = "cajero")
-    void testRegistrarVentaSinStock() throws Exception{
+    void testRegistrarVentaSinStock() throws Exception {
         // Arrange: Establecer stock crítico (2 unidades)
         crearInventario(sucursalDefault, productoDefault, 2);
 

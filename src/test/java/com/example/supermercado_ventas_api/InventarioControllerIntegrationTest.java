@@ -45,8 +45,7 @@ class InventarioControllerIntegrationTest {
     @Test
     @WithMockUser(username = "admin")
     void actualizarInventario_Integracion() throws Exception {
-        // 1. PREPARAR ESCENARIO (Datos previos en BD H2)
-        //TODO Cambiar a MySQL
+        // 1. PREPARAR ESCENARIO
         Sucursal sucursal = sucursalRepository.save(Sucursal.builder().nombreSucursal("S1").direccion("D1").build());
         Producto producto = productoRepository.save(Producto.builder().nombreProducto("P1").precioProducto(BigDecimal.TEN).categoria("C1").build());
 

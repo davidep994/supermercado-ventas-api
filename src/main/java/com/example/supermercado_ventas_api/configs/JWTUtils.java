@@ -34,6 +34,7 @@ public class JWTUtils {
                 .signWith(getKey())
                 .compact();
     }
+
     // Extrae el nombre de usuario contenido en el token JWT
     public String getUsernameFromJwtToken(String token) {
         return Jwts.parser()
@@ -43,6 +44,7 @@ public class JWTUtils {
                 .getPayload()
                 .getSubject();
     }
+
     // Valida la integridad y vigencia del token JWT
     public boolean validateJwtToken(String authToken) {
         try {

@@ -80,7 +80,7 @@ public class InventarioService {
     // 4. Eliminar el Stock de un inventario
     @Transactional
     public void eliminarInventario(Long id) {
-        if (!inventarioRepository.existsById(id)){
+        if (!inventarioRepository.existsById(id)) {
             throw new InventarioNotFoundException(id);
         }
         inventarioRepository.deleteById(id);

@@ -51,7 +51,7 @@ public class ProductoService {
         }
 
         // VALIDACIÓN DE INVENTARIO
-        if (inventarioRepository.existsByProducto_Id(id)){
+        if (inventarioRepository.existsByProducto_Id(id)) {
             throw new IllegalStateException("No se puede eliminar el producto porque tiene stock registrado en el inventario. Elimine el inventario primero.");
         }
 
