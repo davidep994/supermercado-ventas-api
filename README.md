@@ -53,6 +53,7 @@ El proyecto incluye una batería de **40 pruebas unitarias y de integración** q
     ```
 
 4.  **Acceder a la documentación**: Una vez en marcha, visita: `http://localhost:8080/swagger-ui.html`.
+   ![Interfaz de Swagger](screenshots/swagger_ui.png)
 
 ---
 
@@ -84,6 +85,8 @@ Al importarla, tendrás acceso a las siguientes capacidades organizadas por mód
 
 ### 📊 Estadísticas
 * **Análisis clave**: Consulta directa del producto más vendido en todo el sistema.
+
+![Captura de Postman](screenshots/postman.png)
 
 ---
 
@@ -120,3 +123,4 @@ El desarrollo de esta API ha sido llevado a cabo por:
 
 ---
 © 2026 - Proyecto Final: Gestión de Supermercado
+
