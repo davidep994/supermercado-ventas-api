@@ -73,6 +73,7 @@ class VentaServiceTest {
 
         VentaResponseDTO resultado = ventaService.registrarVenta(requestDTO);
 
+        // Verifica cálculo del total y descuento correcto del stock
         assertNotNull(resultado);
         assertEquals(0, new BigDecimal("20.0").compareTo(resultado.total()), "El total debe ser 20.0");
         assertEquals(8, inventarioMock.getCantidad(), "El stock debe quedar en 8");
@@ -97,6 +98,7 @@ class VentaServiceTest {
         when(productoRepository.findAllById(anyList())).thenReturn(List.of(productoMock));
         when(inventarioRepository.findBySucursalAndProducto(sucursalMock, productoMock)).thenReturn(Optional.of(inventarioMock));
 
+        // Regla de negocio: no se permite vender más unidades de las disponibles
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> ventaService.registrarVenta(requestDTO));
 
         assertTrue(exception.getMessage().contains("Stock insuficiente"));

@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
+// Cada test se ejecuta en una transacción que se revierte para aislar escenarios
 @Transactional
 class SucursalControllerIntegrationTest {
 
@@ -43,6 +44,7 @@ class SucursalControllerIntegrationTest {
 
     @Test
     void obtenerTodasLasSucursales_ok() throws Exception {
+        // Verifica que el endpoint responde correctamente aunque no haya datos previos
         mockMvc.perform(get("/api/sucursales"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
@@ -50,6 +52,7 @@ class SucursalControllerIntegrationTest {
 
     @Test
     void obtenerSucursalPorId_ok() throws Exception {
+        // Se crea una sucursal real para validar el flujo completo POST -> GET by id
         Sucursal sucursal = Sucursal.builder()
                 .nombreSucursal("Norte")
                 .direccion("Calle Norte")
@@ -71,6 +74,7 @@ class SucursalControllerIntegrationTest {
 
     @Test
     void actualizarSucursal_ok() throws Exception {
+        // Persistimos una entidad para garantizar que el PUT actúa sobre datos existentes
         Sucursal sucursal = Sucursal.builder()
                 .nombreSucursal("Vieja")
                 .direccion("Calle Vieja")
@@ -100,6 +104,7 @@ class SucursalControllerIntegrationTest {
 
     @Test
     void eliminarSucursal_ok() throws Exception {
+        // Validamos eliminación sobre una sucursal previamente creada
         Sucursal sucursal = Sucursal.builder()
                 .nombreSucursal("Eliminar")
                 .direccion("Calle X")
