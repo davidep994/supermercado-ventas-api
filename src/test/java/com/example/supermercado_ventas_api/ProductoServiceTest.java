@@ -17,7 +17,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
+// Tests unitarios del servicio de productos
 @ExtendWith(MockitoExtension.class)
 class ProductoServiceTest {
 
@@ -46,6 +46,7 @@ class ProductoServiceTest {
 
         Producto resultado = productoService.findById(id);
 
+       // Protección básica: el servicio debe delegar correctamente al repositorio
         assertNotNull(resultado);
         assertEquals("Leche", resultado.getNombreProducto());
         verify(productoRepository, times(1)).findById(id);
@@ -59,6 +60,7 @@ class ProductoServiceTest {
 
         when(productoRepository.existsById(id)).thenReturn(true);
         when(ventaRepository.existsByDetalles_Producto_Id(id)).thenReturn(true);
+
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
             productoService.delete(id);
