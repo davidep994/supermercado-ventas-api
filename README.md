@@ -109,6 +109,7 @@ Si necesitas limpiar tu entorno local y sincronizarte exactamente con la última
 ```bash
 git fetch origin
 git reset --hard origin/main
+```
 
 ---
 
