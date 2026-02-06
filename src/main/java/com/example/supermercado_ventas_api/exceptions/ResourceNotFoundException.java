@@ -1,4 +1,5 @@
 package com.example.supermercado_ventas_api.exceptions;
+
 /**
  * Excepción base utilizada cuando un recurso solicitado
  * no existe en el sistema.

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 /**
  * Servicio encargado de la lógica de negocio relacionada
  * con la gestión de sucursales.
@@ -26,6 +27,7 @@ public class SucursalService {
     public Sucursal findById(Long id) {
         return sucursalRepository.findById(id).orElseThrow(() -> new SucursalNotFoundException(id));
     }
+
     //Crea una nueva sucursal dentro de una transacción
     @Transactional
     public Sucursal create(Sucursal sucursal) {
@@ -40,6 +42,7 @@ public class SucursalService {
         sucursalExistente.setDireccion(sucursal.getDireccion());
         return sucursalRepository.save(sucursalExistente);
     }
+
     //Elimina una sucursal aplicando una regla de negocio
     @Transactional
     public void delete(Long id) {

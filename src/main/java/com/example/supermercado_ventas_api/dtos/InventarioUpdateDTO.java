@@ -2,6 +2,7 @@ package com.example.supermercado_ventas_api.dtos;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+
 /**
  * DTO de entrada utilizado para actualizar la cantidad
  * de stock de un inventario existente.

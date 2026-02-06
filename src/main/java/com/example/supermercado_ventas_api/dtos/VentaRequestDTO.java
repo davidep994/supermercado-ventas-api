@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
+
 /**
  * DTO de entrada utilizado para registrar una venta,
  * incluyendo la sucursal y el detalle de productos vendidos.

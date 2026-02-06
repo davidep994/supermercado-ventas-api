@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -121,7 +122,7 @@ class VentaServiceTest {
                 .build();
 
         //Creamos la solicitud de venta para un producto existente
-        VentaRequestDTO request =  new VentaRequestDTO(sucursalId, List.of(new DetalleRequestDTO(productoId, 1)));
+        VentaRequestDTO request = new VentaRequestDTO(sucursalId, List.of(new DetalleRequestDTO(productoId, 1)));
 
         //Simulamos que la suscursal y el producto existen
         when(sucursalRepository.findById(sucursalId)).thenReturn(Optional.of(sucursalMock));
@@ -181,7 +182,6 @@ class VentaServiceTest {
         verify(inventarioRepository).save(inventarioMock);
         verify(ventaRepository).save(ventaMock);
     }
-
 
 
 }

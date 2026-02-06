@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 /**
  * Controlador encargado de exponer endpoints de estadísticas y reportes
  * relacionados con las ventas del sistema.
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class EstadisticaController {
 
     private final VentaService ventaService;
+
     /**
      * Devuelve el producto con mayor cantidad de ventas registradas.
      * Si no existen datos suficientes, se responde sin contenido.

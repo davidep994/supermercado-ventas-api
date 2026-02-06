@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+
 /**
  * Entidad que representa un producto del catálogo del supermercado,
  * incluyendo su precio y categoría.

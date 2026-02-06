@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+
 /**
  * Controlador REST encargado de la gestión de productos del sistema.
  * Expone operaciones CRUD para administrar el catálogo de productos.
@@ -36,12 +37,14 @@ public class ProductoController {
     public ResponseEntity<Producto> findById(@PathVariable Long id) {
         return ResponseEntity.ok(productoService.findById(id));
     }
+
     // Crea un nuevo producto en el sistema
     @PostMapping
     @Operation(summary = "Crear producto", description = "Crea un nuevo producto en el inventario.")
     public ResponseEntity<Producto> create(@Valid @RequestBody Producto producto) {
         return new ResponseEntity<>(productoService.create(producto), HttpStatus.CREATED);
     }
+
     // Actualiza los datos de un producto existente en el sistema
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar producto", description = "Actualiza los datos de un producto existente.")

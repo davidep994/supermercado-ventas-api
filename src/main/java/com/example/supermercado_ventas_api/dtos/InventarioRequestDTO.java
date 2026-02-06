@@ -2,6 +2,7 @@ package com.example.supermercado_ventas_api.dtos;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+
 /**
  * DTO de entrada utilizado para registrar o actualizar
  * el stock de un producto en una sucursal.
