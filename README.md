@@ -38,7 +38,7 @@ El proyecto incluye una batería de **40 pruebas unitarias y de integración** q
 
 ---
 
-## 📋 Requisitos e Instalación
+## 📋 Requisitos e Instalación clonando repositorio
 
 1.  **Clonar el repositorio**:
     ```bash
@@ -65,6 +65,30 @@ El proyecto incluye una colección de Postman completa ubicada en la raíz del r
 3.  Selecciona el archivo de colección ubicado en la raíz del proyecto (ej: `supermercado-ventas.postman_collection.json`).
 
 Al importarla, tendrás acceso a las siguientes capacidades organizadas por módulos:
+
+## 🐳 Instalación y Despliegue (Modo Recomendado)
+
+Gracias a Docker, no necesitas instalar Java, Node o MySQL en tu máquina. Todo el entorno está automatizado.
+
+### Requisitos Previos
+* Tener [Docker](https://www.docker.com/) y Docker Compose instalados.
+
+### Pasos de Ejecución
+1. **Clonar el repositorio**:
+   ```bash
+   git clone [https://github.com/Edu-GD/supermercado-ventas-api](https://github.com/Edu-GD/supermercado-ventas-api)
+   cd supermercado-ventas-api
+
+2. **Levantar los servicios**:
+   ```bash
+   docker-compose up -d --build
+   
+3. **Acceso a las aplicaciones**:
+    - Frontend (App Web): http://localhost:3000
+    - Backend (Swagger UI): http://localhost:8080/swagger-ui/index.html
+    - Base de Datos (MySQL): Accesible en el puerto 3307 (Usuario: user / Pass: password).
+   
+Nota: Para detener el sistema de forma segura, ejecuta docker-compose down.
 
 ### 📦 Gestión de Inventario y Stock
 * **Operaciones Protegidas**: Agregar, actualizar y eliminar registros de inventario.
@@ -117,10 +141,7 @@ git reset --hard origin/main
 
 El desarrollo de esta API ha sido llevado a cabo por:
 
-* **Edu García**
 * **Davide Pinna**
-* **Carlos David**
-* **Rubén Verde**
 
 ---
 © 2026 - Proyecto Final: Gestión de Supermercado

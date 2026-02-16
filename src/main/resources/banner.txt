@@ -9,8 +9,5 @@ ${AnsiColor.BRIGHT_CYAN}
 >> Application: Supermercado Ventas Api
 >> Version:     1.0.0
 >> Spring Boot: ${spring-boot.version}
->> Developers:  - Rubén V.
-                - Carlos D.
-                - Davide P.
-                - Edu G.
+>> Developers: - Davide P.
 ${AnsiColor.DEFAULT}
