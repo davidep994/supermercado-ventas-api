@@ -42,7 +42,7 @@ El proyecto incluye una batería de **40 pruebas unitarias y de integración** q
 
 1.  **Clonar el repositorio**:
     ```bash
-    git clone [https://github.com/Edu-GD/supermercado-ventas-api](https://github.com/Edu-GD/supermercado-ventas-api)
+    git clone git@github.com:davidep994/supermercado-ventas-api.git
     ```
 
 2.  **Configurar la base de datos**: Ajustar las credenciales de MySQL en `src/main/resources/application.properties`.
