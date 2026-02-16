@@ -33,4 +33,7 @@ public interface VentaRepository extends JpaRepository<Venta, Long> {
             "GROUP BY d.producto.id, d.producto.nombreProducto " +
             "ORDER BY SUM(d.cantidad) DESC")
     List<ProductoTopVentasDTO> findProductoMasVendido(Pageable pageable);
+
+    @Query("SELECT v.fecha, SUM(v.totalVenta) FROM Venta v WHERE v.activa = true GROUP BY v.fecha ORDER BY v.fecha ASC")
+    List<Object[]> findVentasDiarias();
 }

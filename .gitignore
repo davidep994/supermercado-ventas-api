@@ -16,7 +16,6 @@ target/
 ### IntelliJ IDEA ###
 .idea
 *.iws
-*.iml
 *.ipr
 
 ### NetBeans ###
@@ -29,5 +28,21 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### VS Code ###
+# IDEs y Editores
+.idea/
+*.iml
 .vscode/
+
+# Backend (Spring Boot / Maven)
+supermercado-ventas-api/target/
+*.jar
+*.war
+
+# Frontend (React / Vite)
+Front-End/node_modules/
+Front-End/dist/
+Front-End/.env
+
+# Docker y SO
+.DS_Store
+Thumbs.db
